@@ -1,0 +1,1 @@
+export const locationUrl="https://api.geoapify.com/v1/geocode/search?text="
