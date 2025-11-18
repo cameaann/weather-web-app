@@ -1,14 +1,48 @@
 import axios from "axios";
-import { locationUrl } from "../constants";
+import { LOCATION_API, WEATHER_API } from "../constants";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
-
-const getCoordinates = async (city: string) => {
-  const promise = await axios(
-    locationUrl + `&${city}&format=json&apiKey=` + API_KEY
+const getLocation = async (city: string) => {
+  const res = await axios(
+    LOCATION_API + `${city}&format=json&apiKey=${API_KEY}`
   );
-  console.log(promise.data);
-  return promise.data;
+  const { results } = res.data;
+  if (results && results.length > 0) {
+    return results;
+  }
 };
 
-export { getCoordinates };
+const getCurrentWeather = async (lat: number, lon: number) => {
+  console.log("request for Current Weather");
+  const res = await axios(
+    WEATHER_API +
+      `?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&`
+  );
+  const { current, hourly } = res.data;
+  const weatherData = {
+    current: {
+      temperature_2m: current.temperature_2m,
+      wind_speed_10m: current.wind_speed_10m,
+    },
+    hourly: {
+      temperature_2m: hourly.temperature_2m,
+      relative_humidity_2m: hourly.relative_humidity_2m,
+      wind_speed_10m: hourly.wind_speed_10m,
+    },
+  };
+
+  console.log(res.data);
+  return weatherData;
+};
+
+const getLast10daysWeather = async (lat: number, lon: number) => {
+  const res = await axios(
+    WEATHER_API +
+      `?latitude=${lat}&longitude=${lon}&past_days=10&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&`
+  );
+  const { results } = res.data;
+  console.log(results);
+  return results;
+};
+
+export { getLocation, getCurrentWeather, getLast10daysWeather };

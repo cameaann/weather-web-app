@@ -1,6 +1,24 @@
 @import "tailwindcss";
 @plugin "daisyui" {
   themes: dark --default, light --prefersdark;
+  /* themes: light --default, dark --prefersdark; */
+}
+
+@theme {
+  --bg-neutral-0: oklch(0, 0%, 100%);
+  --bg-neutral-200: oklch(250, 6%, 84%);
+  --bg-neutral-300: oklch(240, 6%, 70%);
+  --bg-neutral-600: oklch(243, 23%, 30%);
+  --bg-neutral-700: oklch(243, 23%, 24%);
+  --bg-neutral-800: oklch(243, 27%, 20%);
+  --bg-neutral-900: oklch(243, 96%, 9%);
+
+  --breakpoint-xs: 30rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 78rem;
+  --breakpoint-2xl: 100rem;
+  --breakpoint-3xl: 120rem;
+
 }
 
 html {
@@ -14,7 +32,7 @@ html {
 
   /* color-scheme: light dark; */
   color: rgba(255, 255, 255, 0.87);
-  background-color: #02012c;
+  /* background-color: #02012c; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -44,17 +62,18 @@ h1 {
   line-height: 1.1;
 }
 
-@utility input{
-  @apply border-none focus:outline-none 
+.info-card {
+  background-image: url("./assets/images/bg-today-small.svg");
 }
 
-/* @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
+@media screen and (min-width: 768px) {
+  .info-card {
+    background-image: url("./assets/images/bg-today-large.svg");
 
-} */
+  }
+}
+
+@utility input{
+  @apply border-none focus:outline-none
+}
+
