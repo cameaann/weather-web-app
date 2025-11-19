@@ -14,20 +14,25 @@ const getLocation = async (city: string) => {
 
 const getCurrentWeather = async (lat: number, lon: number) => {
   console.log("request for Current Weather");
+  
   const res = await axios(
     WEATHER_API +
-      `?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&`
+      `?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature`
   );
   const { current, hourly } = res.data;
   const weatherData = {
     current: {
       temperature_2m: current.temperature_2m,
+      relative_humidity_2m: current.relative_humidity_2m,
       wind_speed_10m: current.wind_speed_10m,
+      apparent_temperature: current.apparent_temperature,
+      precipitation: current.precipitation,
     },
     hourly: {
       temperature_2m: hourly.temperature_2m,
       relative_humidity_2m: hourly.relative_humidity_2m,
       wind_speed_10m: hourly.wind_speed_10m,
+      apparent_temperature: hourly.apparent_temperature
     },
   };
 

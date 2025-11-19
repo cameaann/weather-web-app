@@ -5,20 +5,20 @@
 }
 
 @theme {
-  --bg-neutral-0: oklch(0, 0%, 100%);
-  --bg-neutral-200: oklch(250, 6%, 84%);
-  --bg-neutral-300: oklch(240, 6%, 70%);
-  --bg-neutral-600: oklch(243, 23%, 30%);
-  --bg-neutral-700: oklch(243, 23%, 24%);
-  --bg-neutral-800: oklch(243, 27%, 20%);
-  --bg-neutral-900: oklch(243, 96%, 9%);
+
+  --color-neutral-0: oklch(100% 0 0);
+  --color-neutral-200: oklch(85% 0.004 264);
+  --color-neutral-300: oklch(70% 0.008 264);
+  --color-neutral-600: oklch(25% 0.020 264);
+  --color-neutral-700: oklch(21% 0.018 264);
+  --color-neutral-800: oklch(20% 0.08 254);
+  --color-neutral-900: oklch(8% 0.15 270);
 
   --breakpoint-xs: 30rem;
   --breakpoint-md: 48rem;
   --breakpoint-lg: 78rem;
   --breakpoint-2xl: 100rem;
   --breakpoint-3xl: 120rem;
-
 }
 
 html {
@@ -32,7 +32,7 @@ html {
 
   /* color-scheme: light dark; */
   color: rgba(255, 255, 255, 0.87);
-  /* background-color: #02012c; */
+  background-color: oklch(8% 0.15 270);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -69,11 +69,9 @@ h1 {
 @media screen and (min-width: 768px) {
   .info-card {
     background-image: url("./assets/images/bg-today-large.svg");
-
   }
 }
 
-@utility input{
-  @apply border-none focus:outline-none
+@utility input {
+  @apply border-none focus:outline-none;
 }
-
