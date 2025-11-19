@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getCoordinates } from "./getDataService";
-import { locationUrl } from "../constants";
+import { getLocation } from "./getDataService";
+import { LOCATION_API } from "../constants";
 
 jest.mock("axios");
 
@@ -19,9 +19,9 @@ describe("getCoordinates", () => {
 
     (axios.get as jest.Mock).mockResolvedValue(mockResponse);
 
-    const coordinates = await getCoordinates("helsinki");
+    const coordinates = await getLocation("helsinki");
 
-    expect(axios.get).toHaveBeenCalledWith( `${locationUrl}helsinki&key=${import.meta.env.VITE_API_KEY}`);
+    expect(axios.get).toHaveBeenCalledWith( `${LOCATION_API}helsinki&key=${import.meta.env.VITE_API_KEY}`);
     expect(coordinates).toEqual(mockResponse.data);
   });
 });

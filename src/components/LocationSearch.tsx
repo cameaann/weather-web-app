@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import { getLocation, getCurrentWeather } from "../services/getDataService";
-import { useDebounce } from "../hooks/useDebounce";
 
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 import SearchSuggestion from "./SearchSuggestion";
@@ -24,7 +23,7 @@ const LocationSearch = () => {
     null
   );
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
-  const { weatherData, setWeatherData } = useContext(WeatherContext) as WeatherContextType;
+  const { setWeatherData } = useContext(WeatherContext) as WeatherContextType;
 
   useEffect(() => {
     try {
