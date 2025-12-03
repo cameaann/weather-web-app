@@ -18,7 +18,7 @@ const WeatherInfo = () => {
     <>
       <WeatherInfoCard />
       {/* {weatherData && ( */}
-      <div className="flex flex-row gap-1">
+      <div className="flex flex-row justify-between">
         {apparent_temperature ? (
           <WeatherItemCard title="Feels Like" value={`${apparent_temperature} °`}  />
         ) : null}

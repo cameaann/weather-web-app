@@ -14,13 +14,21 @@ const getLocation = async (city: string) => {
 
 const getCurrentWeather = async (lat: number, lon: number) => {
   console.log("request for Current Weather");
-  
+
   const res = await axios(
     WEATHER_API +
-      `?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature`
+      `?latitude=${lat}&longitude=${lon}&daily=apparent_temperature_max,apparent_temperature_min,weather_code&current=temperature_2m,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature`
   );
-  const { current, hourly } = res.data;
+  const { current, hourly, daily } = res.data;
+  const dailyForecast = daily.time.map((date: string, index: number) => ({
+    date: date,
+    temperature_max: daily.apparent_temperature_max[index],
+    temperature_min: daily.apparent_temperature_min[index],
+    weather_code: daily.weather_code[index],
+  }));
+
   const weatherData = {
+    daily: dailyForecast,
     current: {
       temperature_2m: current.temperature_2m,
       relative_humidity_2m: current.relative_humidity_2m,

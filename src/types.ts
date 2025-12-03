@@ -1,8 +1,15 @@
+export interface DailyForecast {
+  date: string;
+  temperature_max: number;
+  temperature_min: number;
+  weather_code: number;
+}
+
 export interface WeatherData {
   city: string;
   country?: string;
   state?: string;
-//   date: ;
+  //   date: ;
   current: {
     temperature_2m: number;
     wind_speed_10m: number;
@@ -15,8 +22,8 @@ export interface WeatherData {
     relative_humidity_2m: number[];
     wind_speed_10m: number[];
   };
+  daily: DailyForecast[];
 }
-
 
 export type WeatherContextType = {
   weatherData: WeatherData | null;
