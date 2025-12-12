@@ -4,7 +4,7 @@ import LocationSearch from "./components/LocationSearch";
 import WeatherProvider from "./weatherContext";
 import WeatherInfo from "./components/WeatherInfo";
 import DailyForcast from "./components/DailyForecast";
-
+import HourlyForecast from "./components/HourlyForecast";
 function App() {
   return (
     <>
@@ -13,6 +13,7 @@ function App() {
         <LocationSearch />
         <WeatherInfo />
         <DailyForcast />
+        <HourlyForecast />
       </WeatherProvider>
     </>
   );

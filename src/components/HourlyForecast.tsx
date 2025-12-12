@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 import type { HourlyForecast } from "../types";
 import HourlyCard from "./HourlyCard";
 import Select from "./custom/Select";
-import StyledSelect from "./custom/StyledSelect";
 
 const HourlyForecast = () => {
   const { weatherData } = useContext(WeatherContext) as WeatherContextType;
