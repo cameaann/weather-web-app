@@ -18,12 +18,12 @@ const SearchSuggestion = ({
   };
 
   return (
-    <ul className="dropdown-content absolute menu bg-base-100 rounded-box p-2 shadow-sm w-md z-1000">
+    <ul className="dropdown-content absolute menu bg-neutral-800 rounded-xl p-2 shadow-sm w-[100%] z-1000">
       {suggestions.map((suggestion, index) => (
         <li
           className={`cursor-pointer ${
             highlightedIndex === index
-              ? "bg-neutral-700 border-l-bg-neutral-600"
+              ? "bg-neutral-700 rounded-xl"
               : "hover:bg-neutral-700"
           }`}
           key={index}

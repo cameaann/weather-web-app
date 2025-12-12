@@ -17,23 +17,29 @@ const WeatherInfo = () => {
   return (
     <>
       <WeatherInfoCard />
-      {/* {weatherData && ( */}
-      <div className="flex flex-row justify-between">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
         {apparent_temperature ? (
-          <WeatherItemCard title="Feels Like" value={`${apparent_temperature} °`}  />
+          <WeatherItemCard
+            title="Feels Like"
+            value={`${apparent_temperature} °`}
+          />
         ) : null}
         {relative_humidity_2m ? (
-          <WeatherItemCard title="Humidity" value={`${relative_humidity_2m} %`} />
+          <WeatherItemCard
+            title="Humidity"
+            value={`${relative_humidity_2m} %`}
+          />
         ) : null}
         {wind_speed_10m ? (
-          <WeatherItemCard title="Wind Speed" value={`${wind_speed_10m} mph`} />
+          <WeatherItemCard title="Wind" value={`${wind_speed_10m} km/h`} />
         ) : null}
-		{precipitation !== undefined && (
-          <WeatherItemCard title="Precipitation" value={`${precipitation} in`} />
+        {precipitation !== undefined && (
+          <WeatherItemCard
+            title="Precipitation"
+            value={`${precipitation} in`}
+          />
         )}
-
       </div>
-      {/* )} */}
     </>
   );
 };

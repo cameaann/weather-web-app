@@ -88,11 +88,11 @@ useEffect(() => {
   return (
     <div className="my-[4.8rem]">
       <form className="flex flex-col gap-2">
-        <label className="input w-auto rounded-xl px-[2.4rem] py-[1.6rem]">
+        <label className="input w-auto rounded-xl px-[2.4rem] py-[1.6rem] bg-neutral-700 focus-visible:outline-none focus-within:outline-none border-none">
           <MagnifyingGlassIcon className="w-6 h-6" />
           <input
             type="search"
-            className="grow py-[1.6rem] text-lg focus:outline-none"
+            className="grow py-[1.6rem] text-lg focus:outline-none focus-visible:outline-none focus-within:outline-none bg-neutral-700 border-none"
             name="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
