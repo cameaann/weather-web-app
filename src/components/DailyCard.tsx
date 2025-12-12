@@ -11,16 +11,16 @@ const DailyCard = ({ day }: DailyProps) => {
   const weatherDesc = getWeatherDescription(day.weather_code);
 
   return (
-    <li className="flex flex-col w-[10rem] h-[16.5rem] items-center bg-neutral-800 border-neutral-400 rounded-lg m-2 p-[1.6rem]">
+    <li className="flex flex-col items-center bg-neutral-800 border-1 border-solid border-neutral-600 rounded-xl m-2 p-[1.6rem] gap-4">
       <span className="text-lg">{formatedDate}</span>
        <img
           src={weatherIcon}
           alt={weatherDesc}
           className="w-16 h-16"
         />
-      <div className="flex flex-row gap-2">
-        <span>{day.temperature_max} °</span>
-        <span>{day.temperature_min} °</span>
+      <div className="flex flex-row gap-2 text-xl">
+        <span className="text-lg">{day.temperature_max} °</span>
+        <span className="text-lg">{day.temperature_min} °</span>
       </div>
     </li>
   );
