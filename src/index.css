@@ -7,12 +7,90 @@
 @theme {
 
   --color-neutral-0: oklch(100% 0 0);
-  --color-neutral-200: oklch(85% 0.004 264);
-  --color-neutral-300: oklch(70% 0.008 264);
-  --color-neutral-600: oklch(25% 0.020 264);
-  --color-neutral-700: oklch(21% 0.018 264);
-  --color-neutral-800: oklch(20% 0.08 254);
-  --color-neutral-900: oklch(8% 0.15 270);
+  @import "tailwindcss";
+@plugin "daisyui" {
+  themes: dark --default, light --prefersdark;
+  /* themes: light --default, dark --prefersdark; */
+}
+
+@theme {
+  /* Color palette */
+  --color-neutral-0: oklch(100% 0 0);           /* hsl(0, 0%, 100%) - White */
+  --color-neutral-200: oklch(85% 0.015 264);    /* hsl(250, 6%, 84%) - Light gray */
+  --color-neutral-300: oklch(72% 0.015 264);    /* hsl(240, 6%, 70%) - Medium gray */
+  --color-neutral-600: oklch(35% 0.045 264);    /* hsl(243, 23%, 30%) - Dark gray */
+  --color-neutral-700: oklch(30% 0.045 264);    /* hsl(243, 23%, 24%) - Darker gray */
+  --color-neutral-800: oklch(25% 0.050 264);    /* hsl(243, 27%, 20%) - Very dark gray */
+  --color-neutral-900: oklch(15% 0.080 264);    /* hsl(243, 96%, 9%) - Almost black */
+
+  /* Breakpoints */
+  --breakpoint-xs: 30rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 78rem;
+  --breakpoint-2xl: 100rem;
+  --breakpoint-3xl: 120rem;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+:root {
+  font-family: DM Sans, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: oklch(100% 0 0);
+  background-color: oklch(15% 0.080 264);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+  font-size: 10px;
+  padding: 0;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+.info-card {
+  background-image: url("./assets/images/bg-today-small.svg");
+}
+
+@media screen and (min-width: 768px) {
+  .info-card {
+    background-image: url("./assets/images/bg-today-large.svg");
+  }
+}
+
+@utility input {
+  @apply border-none focus:outline-none;
+}
+  --color-neutral-300: oklch(72% 0.015 264);
+  --color-neutral-600: oklch(35% 0.045 264);
+  --color-neutral-700: oklch(30% 0.045 264);
+  --color-neutral-800: oklch(25% 0.050 264);
+  --color-neutral-900: oklch(15% 0.080 264);
 
   --breakpoint-xs: 30rem;
   --breakpoint-md: 48rem;
@@ -55,6 +133,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   font-size: 10px;
+  padding: 0;
 }
 
 h1 {
