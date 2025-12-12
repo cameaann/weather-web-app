@@ -5,7 +5,7 @@ export interface DailyForecast {
   weather_code: number;
 }
 
-export interface HourlyForecast {
+export interface HourlyForecastType {
   time: string;
   date: string;
   temperature_2m: number;
@@ -27,9 +27,9 @@ export interface WeatherData {
     relative_humidity_2m?: number;
     precipitation?: number | undefined;
   };
-  hourly:  HourlyForecast[];
+  hourly:  HourlyForecastType[];
   daily: DailyForecast[];
-  hourlyByDay: Record<string, HourlyForecast[]>;
+  hourlyByDay: Record<string, HourlyForecastType[]>;
 }
 
 export type WeatherContextType = {

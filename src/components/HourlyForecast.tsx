@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { WeatherContext } from "../weatherContext";
 import type { WeatherContextType } from "../types";
 import dayjs from "dayjs";
-import type { HourlyForecast } from "../types";
+import type { HourlyForecastType } from "../types";
 import HourlyCard from "./HourlyCard";
 import Select from "./custom/Select";
 
@@ -32,7 +32,7 @@ const HourlyForecast = () => {
 			/>
           </div>
           <ul>
-            {hourlyData?.map((hour: HourlyForecast) => (
+            {hourlyData?.map((hour: HourlyForecastType) => (
               <HourlyCard key={hour.time} hour={hour} />
             ))}
           </ul>
