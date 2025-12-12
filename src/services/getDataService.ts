@@ -1,5 +1,6 @@
 import axios from "axios";
 import { LOCATION_API, WEATHER_API } from "../constants";
+import type { DailyForecast, HourlyForecast } from "../types";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const getLocation = async (city: string) => {
@@ -17,7 +18,7 @@ const getCurrentWeather = async (lat: number, lon: number) => {
 
   const res = await axios(
     WEATHER_API +
-      `?latitude=${lat}&longitude=${lon}&daily=apparent_temperature_max,apparent_temperature_min,weather_code&current=temperature_2m,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature`
+      `?latitude=${lat}&longitude=${lon}&forecast_days=7&daily=apparent_temperature_max,apparent_temperature_min,weather_code&current=temperature_2m,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,weather_code`
   );
   const { current, hourly, daily } = res.data;
   const dailyForecast = daily.time.map((date: string, index: number) => ({
@@ -26,6 +27,22 @@ const getCurrentWeather = async (lat: number, lon: number) => {
     temperature_min: daily.apparent_temperature_min[index],
     weather_code: daily.weather_code[index],
   }));
+
+  const hourlyForecast = hourly.time.map((time: string, index: number) => ({
+    time: time,
+    date: time.split('T')[0],
+    temperature_2m: hourly.temperature_2m[index],
+    relative_humidity_2m: hourly.relative_humidity_2m[index],
+    wind_speed_10m: hourly.wind_speed_10m[index],
+    apparent_temperature: hourly.apparent_temperature[index],
+    weather_code: hourly.weather_code[index],
+  }));
+
+  // Group hourly data by day
+  const hourlyByDay = dailyForecast.reduce((acc: Record<string, HourlyForecast[]>, day: DailyForecast) => {
+    acc[day.date] = hourlyForecast.filter((hour: HourlyForecast )=> hour.date === day.date);
+    return acc;
+  }, {} as Record<string, typeof hourlyForecast>);
 
   const weatherData = {
     daily: dailyForecast,
@@ -36,12 +53,8 @@ const getCurrentWeather = async (lat: number, lon: number) => {
       apparent_temperature: current.apparent_temperature,
       precipitation: current.precipitation,
     },
-    hourly: {
-      temperature_2m: hourly.temperature_2m,
-      relative_humidity_2m: hourly.relative_humidity_2m,
-      wind_speed_10m: hourly.wind_speed_10m,
-      apparent_temperature: hourly.apparent_temperature
-    },
+    hourly: hourlyForecast,
+    hourlyByDay: hourlyByDay,
   };
 
   console.log(res.data);
