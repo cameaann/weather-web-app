@@ -1,6 +1,6 @@
 import axios from "axios";
 import { LOCATION_API, WEATHER_API } from "../constants";
-import type { DailyForecast, HourlyForecast } from "../types";
+import type { DailyForecast, HourlyForecastType } from "../types";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const getLocation = async (city: string) => {
@@ -39,8 +39,8 @@ const getCurrentWeather = async (lat: number, lon: number) => {
   }));
 
   // Group hourly data by day
-  const hourlyByDay = dailyForecast.reduce((acc: Record<string, HourlyForecast[]>, day: DailyForecast) => {
-    acc[day.date] = hourlyForecast.filter((hour: HourlyForecast )=> hour.date === day.date);
+  const hourlyByDay = dailyForecast.reduce((acc: Record<string, HourlyForecastType[]>, day: DailyForecast) => {
+    acc[day.date] = hourlyForecast.filter((hour: HourlyForecastType )=> hour.date === day.date);
     return acc;
   }, {} as Record<string, typeof hourlyForecast>);
 
