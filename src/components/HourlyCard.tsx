@@ -2,10 +2,10 @@ import {
   getWeatherIcon,
   getWeatherDescription,
 } from "../services/getWeatherIcon";
-import type HourlyForecast from "./HourlyForecast";
+import type { HourlyForecastType } from "../types";
 import dayjs from "dayjs";
 
-const HourlyCard = ({ hour }: { hour: HourlyForecast }) => {
+const HourlyCard = ({ hour }: { hour: HourlyForecastType }) => {
   const weatherIcon = getWeatherIcon(hour.weather_code);
   const weatherDesc = getWeatherDescription(hour.weather_code);
   const time = dayjs(hour.time).format("hh A");
