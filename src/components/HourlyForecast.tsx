@@ -12,10 +12,15 @@ const HourlyForecast = () => {
     dayjs().format("YYYY-MM-DD")
   );
   const formatedDay = (date: string) => {
-    return { value: date, label: dayjs(date).format("dddd")};
+    return { value: date, label: dayjs(date).format("dddd") };
   };
   const hourlyData = weatherData?.hourlyByDay[selectedDay];
-  // Filter hourly data for the selected day
+
+  const options = weatherData
+    ? Object.keys(weatherData?.hourlyByDay || {}).map((date) =>
+        formatedDay(date)
+      )
+    : [];
 
   return (
     <>
@@ -23,13 +28,11 @@ const HourlyForecast = () => {
         <div className="bg-neutral-800 rounded-lg m-2 p-4">
           <div className="flex p-2 items-center justify-between">
             <h2 className="text-2xl font-bold">Hourly Forecast</h2>
-			<Select
-			  options={Object.keys(weatherData?.hourlyByDay || {}).map((date) =>
-				formatedDay(date)
-			  )}
-			  value={selectedDay}
-			  onChange={setSelectedDay}
-			/>
+            <Select
+              options={options}
+              value={selectedDay}
+              onChange={setSelectedDay}
+            />
           </div>
           <ul>
             {hourlyData?.map((hour: HourlyForecastType) => (

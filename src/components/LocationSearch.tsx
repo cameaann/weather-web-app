@@ -5,6 +5,7 @@ import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon
 import SearchSuggestion from "./SearchSuggestion";
 import { WeatherContext } from "../weatherContext";
 import type { WeatherContextType } from "../types";
+import Button from "./custom/Button";
 
 export interface LocationSuggestion {
   displayName: string;
@@ -44,28 +45,28 @@ const LocationSearch = () => {
     }
   }, [query]);
 
-useEffect(() => {
-  console.log("Location", selectedLocation);
-  if (selectedLocation) {
-    try {
-      getCurrentWeather(selectedLocation.lat, selectedLocation.lon).then(
-        (res) => {
-          console.log("From Second useEffect", res);
-          const weather= res;
-          const weatherData = {
-            city: selectedLocation.city,
-            country: selectedLocation.country,
-            ...weather
-          }
+  useEffect(() => {
+    console.log("Location", selectedLocation);
+    if (selectedLocation) {
+      try {
+        getCurrentWeather(selectedLocation.lat, selectedLocation.lon).then(
+          (res) => {
+            console.log("From Second useEffect", res);
+            const weather = res;
+            const weatherData = {
+              city: selectedLocation.city,
+              country: selectedLocation.country,
+              ...weather,
+            };
 
-          setWeatherData(weatherData)
-        }
-      );
-    } catch (error) {
-      console.error("Error fetching weather data:", error);
+            setWeatherData(weatherData);
+          }
+        );
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+      }
     }
-  }
-}, [selectedLocation]);
+  }, [selectedLocation]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "ArrowDown") {
@@ -87,42 +88,47 @@ useEffect(() => {
 
   return (
     <div className="my-[4.8rem]">
-      <form className="flex flex-col gap-2">
-        <label className="input w-auto rounded-xl px-[2.4rem] py-[1.6rem] bg-neutral-700 focus-visible:outline-none focus-within:outline-none border-none">
-          <MagnifyingGlassIcon className="w-6 h-6" />
-          <input
-            type="search"
-            className="grow py-[1.6rem] text-lg focus:outline-none focus-visible:outline-none focus-within:outline-none bg-neutral-700 border-none"
-            name="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => handleKeyDown(e)}
-            placeholder="Search for a place..."
-            tabIndex={0}
-          />
-        </label>
-        {showSuggestions && suggestions.length > 0 && (
-          <div className="relative dropdown dropdown-open">
-            <SearchSuggestion
-              suggestions={suggestions}
-              setLocation={(location: LocationSuggestion) => {
-                setLocation(location);
-                console.log("location nnn", selectedLocation);
-                setShowSuggestions(false)
-              }}
-              highlightedIndex={highlightedIndex}
-              setHighlightedIndex={setHighlightedIndex}
+      <form className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 justify-center">
+        <div className="w-auto md:w-[60%] flex flex-col relative">
+          <label className="input h-[4rem] w-full rounded-xl px-[2.4rem] py-[1.6rem] bg-neutral-700 focus-visible:outline-none focus-within:outline-none border-none">
+            <MagnifyingGlassIcon className="w-6 h-6" />
+            <input
+              type="search"
+              className="grow py-[1.6rem] w-full h-[4rem] text-xl focus:outline-none focus-visible:outline-none focus-within:outline-none bg-neutral-700 border-none"
+              name="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => handleKeyDown(e)}
+              placeholder="Search for a place..."
+              tabIndex={0}
             />
-          </div>
-        )}
-        <button
+          </label>
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="dropdown dropdown-open">
+              <SearchSuggestion
+                suggestions={suggestions}
+                setLocation={(location: LocationSuggestion) => {
+                  setLocation(location);
+                  console.log("location nnn", selectedLocation);
+                  setShowSuggestions(false);
+                }}
+                highlightedIndex={highlightedIndex}
+                setHighlightedIndex={setHighlightedIndex}
+              />
+            </div>
+          )}
+        </div>
+
+        <Button
           type="submit"
           name="search"
+          className="btn"
+          variant="primary"
+          size="xl"
           aria-label="Search"
-          className="btn btn-xl btn-primary z-10"
         >
           Search
-        </button>
+        </Button>
       </form>
     </div>
   );
