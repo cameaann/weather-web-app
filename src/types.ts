@@ -36,3 +36,16 @@ export type WeatherContextType = {
   weatherData: WeatherData | null;
   setWeatherData: (weather: WeatherData) => void;
 };
+
+
+export interface SettingsType {
+  units: string;
+  temperatureUnit: string;
+  windSpeedUnit: string;
+  precipitationUnit: string;
+}
+
+export interface SettingContextType {
+  settings: SettingsType;
+  setSettings: (settings: SettingsType) => void;
+}

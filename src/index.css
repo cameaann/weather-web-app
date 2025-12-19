@@ -6,13 +6,25 @@
 
 @theme {
   /* Color palette */
-  --color-neutral-0: oklch(100% 0 0);           /* hsl(0, 0%, 100%) - White */
-  --color-neutral-200: oklch(85% 0.015 264);    /* hsl(250, 6%, 84%) - Light gray */
-  --color-neutral-300: oklch(72% 0.015 264);    /* hsl(240, 6%, 70%) - Medium gray */
-  --color-neutral-600: oklch(35% 0.045 264);    /* hsl(243, 23%, 30%) - Dark gray */
-  --color-neutral-700: oklch(30% 0.045 264);    /* hsl(243, 23%, 24%) - Darker gray */
-  --color-neutral-800: oklch(25% 0.050 264);    /* hsl(243, 27%, 20%) - Very dark gray */
-  --color-neutral-900: oklch(15% 0.080 264);    /* hsl(243, 96%, 9%) - Almost black */
+  --color-neutral-0: oklch(100% 0 0); /* hsl(0, 0%, 100%) - White */
+  --color-neutral-200: oklch(
+    85% 0.015 264
+  ); /* hsl(250, 6%, 84%) - Light gray */
+  --color-neutral-300: oklch(
+    72% 0.015 264
+  ); /* hsl(240, 6%, 70%) - Medium gray */
+  --color-neutral-600: oklch(
+    35% 0.045 264
+  ); /* hsl(243, 23%, 30%) - Dark gray */
+  --color-neutral-700: oklch(
+    30% 0.045 264
+  ); /* hsl(243, 23%, 24%) - Darker gray */
+  --color-neutral-800: oklch(
+    25% 0.05 264
+  ); /* hsl(243, 27%, 20%) - Very dark gray */
+  --color-neutral-900: oklch(
+    15% 0.08 264
+  ); /* hsl(243, 96%, 9%) - Almost black */
 
   /* Breakpoints */
   --breakpoint-xs: 30rem;
@@ -20,6 +32,51 @@
   --breakpoint-lg: 78rem;
   --breakpoint-2xl: 100rem;
   --breakpoint-3xl: 120rem;
+}
+
+@layer components {
+  .custom-radio {
+    @apply appearance-none h-5 rounded cursor-pointer transition-all;
+  }
+
+  .custom-radio:checked {
+    @apply border-transparent;
+    background-image: url("../assets/images/icon-checkmark.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    fill: aliceblue;
+    background-size: 100%;
+    background-color: var(--color-neutral-600);
+  }
+
+  .custom-radio:hover {
+    @apply border-blue-400;
+  }
+
+  /* New: Style the label with check icon */
+  .radio-label {
+    @apply flex items-center gap-2 cursor-pointer font-bold w-full text-left py-3 px-1 justify-start basis-5;
+  }
+
+  .radio-label:has(input[type="radio"]:checked)::after {
+    content: " ";
+    width: 2rem;
+    height: 2rem;
+    background-image: url("./assets/images/icon-checkmark.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    /* background-size: 100%;
+    background-color: var(--color-neutral-600); */
+  }
+  .radio-label:has(input[type="radio"]:checked) {
+    background-size: 100%;
+    background-color: var(--color-neutral-600);
+    border-radius: .8rem;
+  }
+
+  input.custom-radio:checked + .radio-label::after {
+    opacity: 1;
+  }
 }
 
 html {
@@ -32,7 +89,7 @@ html {
   font-weight: 400;
 
   color: oklch(100% 0 0);
-  background-color: oklch(15% 0.080 264);
+  background-color: oklch(15% 0.08 264);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
