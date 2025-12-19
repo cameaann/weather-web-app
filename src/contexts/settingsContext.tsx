@@ -4,7 +4,9 @@ import { type SettingContextType } from "../types"
 const defaultSettings: SettingContextType = {
   settings: {
 	units: 'metric',
-	temperatureUnit: 'C'
+	temperatureUnit: 'C',
+  windSpeedUnit: 'km/h',
+  precipitationUnit: 'millimeters'
   },
   setSettings: () => {}
 };
