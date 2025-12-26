@@ -1,37 +1,67 @@
-import { useContext } from "react";
-import { useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { SettingContext } from "../contexts/settingsContext";
 import settingsIcon from "../assets/images/icon-units.svg";
 import { type SettingsType } from "../types";
 
 const Settings = () => {
-  const settingsContext = useContext(SettingContext);
+  const { settings, setSettings } = useContext(SettingContext);
   const [showSettings, setShowSettings] = useState(false);
-  const [tempUnit, setTempUnit] = useState(settingsContext?.settings.temperatureUnit || "C");
-  const [windUnit, setWindUnit] = useState(settingsContext?.settings.windSpeedUnit || "km/h");
-  const [precipUnit, setPrecipUnit] = useState(settingsContext?.settings.precipitationUnit || "millimeters");
+  const [tempUnit, setTempUnit] = useState(settings.temperatureUnit || "C");
+  const [windUnit, setWindUnit] = useState(settings.windSpeedUnit || "km/h");
+  const [precipUnit, setPrecipUnit] = useState(
+    settings.precipitationUnit || "millimeters"
+  );
+  const settingsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        settingsRef.current &&
+        !settingsRef.current.contains(event.target as Node)
+      ) {
+        setShowSettings(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
 
   const label = () => (
-    <span className="flex gap-3 items-center">
+    <span className="flex gap-3 items-center  bg-neutral-800 p-3 rounded-lg cursor-pointer select-none">
       <i>
         <img src={settingsIcon} alt="Units" />
       </i>
       Units
+       <svg
+        className={`w-6 h-6 transition-transform duration-300 ${
+          showSettings ? "rotate-180" : ""
+        }`}
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          fillRule="evenodd"
+          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+          clipRule="evenodd"
+        />
+      </svg>
     </span>
   );
-  const units =
-    settingsContext?.settings.units === "metric" ? "Imperial" : "Metric";
+  const units = settings.units === "metric" ? "Imperial" : "Metric";
 
   const handleSwitchUnits = () => {
-    const newUnits =
-      settingsContext?.settings.units === "metric" ? "imperial" : "metric";
+    const newUnits = settings.units === "metric" ? "imperial" : "metric";
     const newSettings: SettingsType = {
-      ...settingsContext!.settings,
+      ...settings,
       units: newUnits,
       windSpeedUnit: newUnits === "metric" ? "km/h" : "mph",
       precipitationUnit: newUnits === "metric" ? "millimeters" : "inches",
     };
-    settingsContext?.setSettings(newSettings);
+    setSettings(newSettings);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,21 +72,29 @@ const Settings = () => {
       windSpeedUnit: windUnit,
       precipitationUnit: precipUnit,
     };
-    settingsContext?.setSettings(newSettings);
+    setSettings(newSettings);
     setShowSettings(false);
   };
 
+  const handleTempUnitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempUnit(e.target.value);
+    setSettings({
+      ...settings,
+      temperatureUnit: e.target.value,
+    });
+  };
+
   return (
-    <>
+    <div ref={settingsRef}>
       <div onClick={() => setShowSettings(!showSettings)}>{label()}</div>
 
       {showSettings && (
         <form
-          className="absolute w-[21.4rem] right-5 top-20 p-5 rounded-lg bg-neutral-800 text-left z-10 border-1 border-solid border-neutral-800"
+          className="absolute w-[21.4rem] right-[1rem] top-30 p-5 rounded-lg bg-neutral-800 text-left z-10 border-1 border-solid border-neutral-800"
           onSubmit={handleSubmit}
         >
           <button
-            className="text-lg text-left"
+            className="text-lg text-left font-bold"
             onClick={handleSwitchUnits}
             type="button"
           >
@@ -74,7 +112,7 @@ const Settings = () => {
                 value="C"
                 className="custom-radio"
                 checked={tempUnit === "C"}
-                onChange={() => setTempUnit("C")}
+                onChange={handleTempUnitChange}
               />
               <span className="basis-60 h-[2rem] flex items-center">
                 Celsius (C)
@@ -88,7 +126,7 @@ const Settings = () => {
                 value="F"
                 className="custom-radio"
                 checked={tempUnit === "F"}
-                onChange={() => setTempUnit("F")}
+                onChange={handleTempUnitChange}
               />
               <span className="basis-60 h-[2rem] flex items-center">
                 Fahrenheit (F)
@@ -107,7 +145,7 @@ const Settings = () => {
                 name="windSpeed"
                 value="km/h"
                 className="custom-radio"
-                checked={settingsContext?.settings.windSpeedUnit === "km/h"}
+                checked={settings.windSpeedUnit === "km/h"}
                 onChange={() => setWindUnit("km/h")}
               />
               <span className="basis-60 h-[2rem] flex items-center">km/h</span>
@@ -119,7 +157,7 @@ const Settings = () => {
                 name="windSpeed"
                 value="mph"
                 className="custom-radio"
-                checked={settingsContext?.settings.windSpeedUnit === "mph"}
+                checked={settings.windSpeedUnit === "mph"}
                 onChange={() => setWindUnit("mph")}
               />
               <span className="basis-60 h-[2rem] flex items-center">mph</span>
@@ -137,7 +175,7 @@ const Settings = () => {
                 name="precipitation"
                 value="millimeters"
                 className="custom-radio"
-                checked={settingsContext?.settings.precipitationUnit === "millimeters"}
+                checked={settings.precipitationUnit === "millimeters"}
                 onChange={() => setPrecipUnit("millimeters")}
               />
               <span className="basis-60 h-[2rem] flex items-center">
@@ -151,7 +189,7 @@ const Settings = () => {
                 name="precipitation"
                 value="in"
                 className="custom-radio"
-                checked={settingsContext?.settings.precipitationUnit === "inches"}
+                checked={settings.precipitationUnit === "inches"}
                 onChange={() => setPrecipUnit("inches")}
               />
               <span className="basis-60 h-[2rem] flex items-center">
@@ -161,7 +199,7 @@ const Settings = () => {
           </fieldset>
         </form>
       )}
-    </>
+    </div>
   );
 };
 

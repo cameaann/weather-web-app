@@ -13,12 +13,16 @@ const getLocation = async (city: string) => {
   }
 };
 
-const getCurrentWeather = async (lat: number, lon: number) => {
+const getCurrentWeather = async (lat: number, lon: number, units: string, temperatureUnit: string) => {
   console.log("request for Current Weather");
+
+  const unitsParam = units === "metric" ? "wind_speed_unit=kmh" : "wind_speed_unit=mph";
+  const temp = temperatureUnit === "C" ? "celsius" : "fahrenheit";
+
 
   const res = await axios(
     WEATHER_API +
-      `?latitude=${lat}&longitude=${lon}&forecast_days=7&daily=apparent_temperature_max,apparent_temperature_min,weather_code&current=temperature_2m,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,weather_code`
+      `?latitude=${lat}&longitude=${lon}&forecast_days=7&daily=apparent_temperature_max,apparent_temperature_min,weather_code&current=temperature_2m,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,weather_code&temperature_unit=${temp}&${unitsParam}`
   );
   const { current, hourly, daily } = res.data;
   const dailyForecast = daily.time.map((date: string, index: number) => ({
@@ -57,17 +61,15 @@ const getCurrentWeather = async (lat: number, lon: number) => {
     hourlyByDay: hourlyByDay,
   };
 
-  console.log(res.data);
   return weatherData;
 };
 
 const getLast10daysWeather = async (lat: number, lon: number) => {
   const res = await axios(
     WEATHER_API +
-      `?latitude=${lat}&longitude=${lon}&past_days=10&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&`
+      `?latitude=${lat}&longitude=${lon}&past_days=10&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`
   );
   const { results } = res.data;
-  console.log(results);
   return results;
 };
 

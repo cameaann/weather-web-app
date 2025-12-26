@@ -11,5 +11,5 @@ const defaultSettings: SettingContextType = {
   setSettings: () => {}
 };
 
-export const SettingContext = createContext<SettingContextType | undefined>(defaultSettings);
+export const SettingContext = createContext<SettingContextType>(defaultSettings);
 
