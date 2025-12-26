@@ -16,7 +16,7 @@ const HourlyCard = ({ hour }: { hour: HourlyForecastType }) => {
         <img src={weatherIcon} alt={weatherDesc} className="w-8 h-8" />
         {time}
       </div>
-      {hour.temperature_2m}°C
+      {hour.temperature_2m}°
     </li>
   );
 };

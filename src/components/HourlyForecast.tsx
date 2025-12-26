@@ -25,7 +25,7 @@ const HourlyForecast = () => {
   return (
     <>
       {weatherData ? (
-        <div className="bg-neutral-800 rounded-lg m-2 p-4">
+        <div className="bg-neutral-800 rounded-3xl my-4 p-4">
           <div className="flex p-2 items-center justify-between">
             <h2 className="text-2xl font-bold">Hourly Forecast</h2>
             <Select

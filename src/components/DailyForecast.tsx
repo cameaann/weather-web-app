@@ -10,9 +10,11 @@ const DailyForcast = () => {
   return (
     <div>
       {dailyData ? (
-        <div className="mt-4 ">
-          <h2 className="text-2xl font-bold text-left mb-4 ml-2">Daily Forecast</h2>
-          <ul className="grid grid-cols-3 md:grid-cols-7 gap-1]">
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-left mb-4 ml-2">
+            Daily Forecast
+          </h2>
+          <ul className="grid grid-cols-3 md:grid-cols-7 gap-3">
             {dailyData.map((day, index) => (
               <DailyCard key={day.date || index} day={day} />
             ))}

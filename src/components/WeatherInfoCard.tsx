@@ -1,12 +1,15 @@
 import { useContext } from "react";
 import { WeatherContext } from "../weatherContext";
-import type { WeatherContextType } from "../types";
+import type { SettingContextType, WeatherContextType } from "../types";
 import SunImage from "../assets/images/icon-sunny.webp";
 import dayjs from "dayjs";
+import { SettingContext } from "../contexts/settingsContext";
 
 const WeatherInfoCard = () => {
   const { weatherData } = useContext(WeatherContext) as WeatherContextType;
   const currentDay = dayjs().format("dddd, MMMM D");
+  const { settings } = useContext(SettingContext) as SettingContextType
+  const unit = settings?.temperatureUnit === "C" ? "°C" : "°F";
 
   return (
     <>
@@ -22,7 +25,7 @@ const WeatherInfoCard = () => {
           <div className="text-8xl flex items-center gap-8">
             <img className="w-40" src={SunImage} alt="sun icon" />
             <span className="semibold italic">
-              {weatherData.current.temperature_2m} &deg;
+              {weatherData.current.temperature_2m} {unit}
             </span>
           </div>
         </div>
