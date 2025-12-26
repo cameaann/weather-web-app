@@ -4,8 +4,9 @@ import { getLocation, getCurrentWeather } from "../services/getDataService";
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 import SearchSuggestion from "./SearchSuggestion";
 import { WeatherContext } from "../weatherContext";
-import type { WeatherContextType } from "../types";
+import type { SettingContextType, WeatherContextType } from "../types";
 import Button from "./custom/Button";
+import { SettingContext } from "../contexts/settingsContext";
 
 export interface LocationSuggestion {
   displayName: string;
@@ -25,6 +26,7 @@ const LocationSearch = () => {
   );
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const { setWeatherData } = useContext(WeatherContext) as WeatherContextType;
+  const { settings } = useContext(SettingContext) as SettingContextType;
 
   useEffect(() => {
     try {
@@ -46,10 +48,9 @@ const LocationSearch = () => {
   }, [query]);
 
   useEffect(() => {
-    console.log("Location", selectedLocation);
     if (selectedLocation) {
       try {
-        getCurrentWeather(selectedLocation.lat, selectedLocation.lon).then(
+        getCurrentWeather(selectedLocation.lat, selectedLocation.lon, settings.units, settings.temperatureUnit).then(
           (res) => {
             console.log("From Second useEffect", res);
             const weather = res;
@@ -66,7 +67,7 @@ const LocationSearch = () => {
         console.error("Error fetching weather data:", error);
       }
     }
-  }, [selectedLocation]);
+  }, [selectedLocation, settings]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "ArrowDown") {
