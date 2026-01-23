@@ -5,7 +5,7 @@ import type { DailyForecast, HourlyForecastType } from "../types";
 const API_KEY = import.meta.env.VITE_API_KEY;
 const getLocation = async (city: string) => {
   const res = await axios(
-    LOCATION_API + `${city}&format=json&apiKey=${API_KEY}`
+    LOCATION_API + `${city}&format=json&apiKey=${API_KEY}`,
   );
   const { results } = res.data;
   if (results && results.length > 0) {
@@ -13,16 +13,21 @@ const getLocation = async (city: string) => {
   }
 };
 
-const getCurrentWeather = async (lat: number, lon: number, units: string, temperatureUnit: string) => {
+const getCurrentWeather = async (
+  lat: number,
+  lon: number,
+  units: string,
+  temperatureUnit: string,
+) => {
   console.log("request for Current Weather");
 
-  const unitsParam = units === "metric" ? "wind_speed_unit=kmh" : "wind_speed_unit=mph";
+  const unitsParam =
+    units === "metric" ? "wind_speed_unit=kmh" : "wind_speed_unit=mph";
   const temp = temperatureUnit === "C" ? "celsius" : "fahrenheit";
-
 
   const res = await axios(
     WEATHER_API +
-      `?latitude=${lat}&longitude=${lon}&forecast_days=7&daily=apparent_temperature_max,apparent_temperature_min,weather_code&current=temperature_2m,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,weather_code&temperature_unit=${temp}&${unitsParam}`
+      `?latitude=${lat}&longitude=${lon}&forecast_days=7&daily=apparent_temperature_max,apparent_temperature_min,weather_code&current=temperature_2m,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,weather_code&temperature_unit=${temp}&${unitsParam}`,
   );
   const { current, hourly, daily } = res.data;
   const dailyForecast = daily.time.map((date: string, index: number) => ({
@@ -34,7 +39,7 @@ const getCurrentWeather = async (lat: number, lon: number, units: string, temper
 
   const hourlyForecast = hourly.time.map((time: string, index: number) => ({
     time: time,
-    date: time.split('T')[0],
+    date: time.split("T")[0],
     temperature_2m: hourly.temperature_2m[index],
     relative_humidity_2m: hourly.relative_humidity_2m[index],
     wind_speed_10m: hourly.wind_speed_10m[index],
@@ -42,11 +47,28 @@ const getCurrentWeather = async (lat: number, lon: number, units: string, temper
     weather_code: hourly.weather_code[index],
   }));
 
+  const getNextHours = (hourlyForecast: HourlyForecastType[]) => {
+    const now = new Date();
+    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+
+    return hourlyForecast.filter((hour: HourlyForecastType) => {
+      const hourTime = new Date(hour.time);
+      return hourTime >= now && hourTime <= endOfDay;
+    });
+  };
+  const nextHours = getNextHours(hourlyForecast);
+  console.log("Next hours", nextHours);
+
   // Group hourly data by day
-  const hourlyByDay = dailyForecast.reduce((acc: Record<string, HourlyForecastType[]>, day: DailyForecast) => {
-    acc[day.date] = hourlyForecast.filter((hour: HourlyForecastType )=> hour.date === day.date);
-    return acc;
-  }, {} as Record<string, typeof hourlyForecast>);
+  const hourlyByDay = dailyForecast.reduce(
+    (acc: Record<string, HourlyForecastType[]>, day: DailyForecast) => {
+      acc[day.date] = nextHours.filter(
+        (hour: HourlyForecastType) => hour.date === day.date,
+      );
+      return acc;
+    },
+    {} as Record<string, typeof hourlyForecast>,
+  );
 
   const weatherData = {
     daily: dailyForecast,
@@ -67,7 +89,7 @@ const getCurrentWeather = async (lat: number, lon: number, units: string, temper
 const getLast10daysWeather = async (lat: number, lon: number) => {
   const res = await axios(
     WEATHER_API +
-      `?latitude=${lat}&longitude=${lon}&past_days=10&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`
+      `?latitude=${lat}&longitude=${lon}&past_days=10&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`,
   );
   const { results } = res.data;
   return results;
