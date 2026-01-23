@@ -35,6 +35,8 @@ export interface WeatherData {
 export type WeatherContextType = {
   weatherData: WeatherData | null;
   setWeatherData: (weather: WeatherData) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
 };
 
 

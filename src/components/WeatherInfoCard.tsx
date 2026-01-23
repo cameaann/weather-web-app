@@ -1,14 +1,15 @@
 import { useContext } from "react";
-import { WeatherContext } from "../weatherContext";
+import { WeatherContext } from "../contexts/weatherContext";
 import type { SettingContextType, WeatherContextType } from "../types";
 import SunImage from "../assets/images/icon-sunny.webp";
 import dayjs from "dayjs";
 import { SettingContext } from "../contexts/settingsContext";
+import { Skeleton } from "./custom/Skeleton";
 
 const WeatherInfoCard = () => {
-  const { weatherData } = useContext(WeatherContext) as WeatherContextType;
+  const { weatherData, loading } = useContext(WeatherContext) as WeatherContextType;
   const currentDay = dayjs().format("dddd, MMMM D");
-  const { settings } = useContext(SettingContext) as SettingContextType
+  const { settings } = useContext(SettingContext) as SettingContextType;
   const unit = settings?.temperatureUnit === "C" ? "°C" : "°F";
 
   return (
@@ -29,6 +30,8 @@ const WeatherInfoCard = () => {
             </span>
           </div>
         </div>
+      ) : loading ? (
+        <Skeleton height="28.6rem" width="100%" borderRadius="1.5rem"/>
       ) : null}
     </>
   );

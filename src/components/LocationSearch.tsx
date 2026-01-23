@@ -3,7 +3,7 @@ import { getLocation, getCurrentWeather } from "../services/getDataService";
 
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 import SearchSuggestion from "./SearchSuggestion";
-import { WeatherContext } from "../weatherContext";
+import { WeatherContext } from "../contexts/weatherContext";
 import type { SettingContextType, WeatherContextType } from "../types";
 import Button from "./custom/Button";
 import { SettingContext } from "../contexts/settingsContext";
@@ -25,7 +25,7 @@ const LocationSearch = () => {
     null
   );
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
-  const { setWeatherData } = useContext(WeatherContext) as WeatherContextType;
+  const { setWeatherData, setLoading } = useContext(WeatherContext) as WeatherContextType;
   const { settings } = useContext(SettingContext) as SettingContextType;
 
   useEffect(() => {
@@ -49,9 +49,15 @@ const LocationSearch = () => {
 
   useEffect(() => {
     if (selectedLocation) {
-      try {
-        getCurrentWeather(selectedLocation.lat, selectedLocation.lon, settings.units, settings.temperatureUnit).then(
-          (res) => {
+      setLoading(true);
+      setTimeout(() => {
+        try {
+          getCurrentWeather(
+            selectedLocation.lat,
+            selectedLocation.lon,
+            settings.units,
+            settings.temperatureUnit
+          ).then((res) => {
             console.log("From Second useEffect", res);
             const weather = res;
             const weatherData = {
@@ -61,11 +67,12 @@ const LocationSearch = () => {
             };
 
             setWeatherData(weatherData);
-          }
-        );
-      } catch (error) {
-        console.error("Error fetching weather data:", error);
-      }
+          });
+        } catch (error) {
+          console.error("Error fetching weather data:", error);
+        }
+        setLoading(false);
+      }, 2000);
     }
   }, [selectedLocation, settings]);
 
@@ -90,8 +97,8 @@ const LocationSearch = () => {
   return (
     <div className="my-[4.8rem]">
       <form className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 justify-center">
-        <div className="w-auto md:w-[60%] flex flex-col relative">
-          <label className="input h-[4rem] w-full rounded-xl px-[2.4rem] py-[1.6rem] bg-neutral-700 focus-visible:outline-none focus-within:outline-none border-none">
+        <div className="w-[100] md:w-[50rem] flex flex-col relative">
+          <label className="input h-[4rem] w-full rounded-xl px-[2.4rem]  bg-neutral-700 border-none focus-visible:outline-none focus-within:outline-none border-none">
             <MagnifyingGlassIcon className="w-6 h-6" />
             <input
               type="search"
