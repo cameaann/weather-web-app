@@ -97,7 +97,7 @@ const LocationSearch = () => {
   return (
     <div className="my-[4.8rem]">
       <form className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 justify-center">
-        <div className="w-[100] md:w-[50rem] flex flex-col relative">
+        <div className="w-[100%] md:w-[50rem] flex flex-col relative">
           <label className="input h-[4rem] w-full rounded-xl px-[2.4rem]  bg-neutral-700 border-none focus-visible:outline-none focus-within:outline-none border-none">
             <MagnifyingGlassIcon className="w-6 h-6" />
             <input
