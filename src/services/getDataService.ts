@@ -49,11 +49,10 @@ const getCurrentWeather = async (
 
   const getNextHours = (hourlyForecast: HourlyForecastType[]) => {
     const now = new Date();
-    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
 
     return hourlyForecast.filter((hour: HourlyForecastType) => {
       const hourTime = new Date(hour.time);
-      return hourTime >= now && hourTime <= endOfDay;
+      return hourTime >= now;
     });
   };
   const nextHours = getNextHours(hourlyForecast);
