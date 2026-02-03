@@ -52,29 +52,37 @@ const LocationSearch = () => {
   useEffect(() => {
     if (selectedLocation) {
       setLoading(true);
-        try {
-          getCurrentWeather(
-            selectedLocation.lat,
-            selectedLocation.lon,
-            settings.units,
-            settings.temperatureUnit,
-          ).then((res) => {
-            console.log("From Second useEffect", res);
-            const weather = res;
-            const weatherData = {
-              city: selectedLocation.city,
-              country: selectedLocation.country,
-              ...weather,
-            };
+      try {
+        getCurrentWeather(
+          selectedLocation.lat,
+          selectedLocation.lon,
+          settings.units,
+          settings.temperatureUnit,
+        ).then((res) => {
+          console.log("From Second useEffect", res);
+          const weather = res;
+          const weatherData = {
+            city: selectedLocation.city,
+            country: selectedLocation.country,
+            ...weather,
+          };
 
-            setWeatherData(weatherData);
-          });
-        } catch (error) {
-          console.error("Error fetching weather data:", error);
-        }
-        setLoading(false);
+          setWeatherData(weatherData);
+        });
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+      }
+      setLoading(false);
     }
   }, [selectedLocation, settings, setWeatherData, setLoading]);
+
+  const handleQuery = () => {
+    setQuery(
+        suggestions[highlightedIndex].city +
+          (suggestions[highlightedIndex].state ? ", " + suggestions[highlightedIndex].state : "") +
+          (suggestions[highlightedIndex].country ? ", " + suggestions[highlightedIndex].country : "")
+      );
+  }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "ArrowDown") {
@@ -90,6 +98,17 @@ const LocationSearch = () => {
     } else if (event.key === "Enter" && highlightedIndex >= 0) {
       event.preventDefault();
       setLocation(suggestions[highlightedIndex]);
+      handleQuery();
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (highlightedIndex >= 0) {
+      setLocation(suggestions[highlightedIndex]);
+      handleQuery();
       setShowSuggestions(false);
     }
   };
@@ -117,7 +136,11 @@ const LocationSearch = () => {
                 suggestions={suggestions}
                 setLocation={(location: LocationSuggestion) => {
                   setLocation(location);
-                  console.log("location nnn", selectedLocation);
+                  // setQuery(
+                  //   location.city +
+                  //     (location.state ? ", " + location.state : "") +
+                  //     (location.country ? ", " + location.country : "")
+                  // );
                   setShowSuggestions(false);
                 }}
                 highlightedIndex={highlightedIndex}
@@ -134,6 +157,7 @@ const LocationSearch = () => {
           variant="primary"
           size="xl"
           aria-label="Search"
+          onClick={handleSubmit}
         >
           Search
         </Button>
