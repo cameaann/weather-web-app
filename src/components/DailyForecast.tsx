@@ -13,7 +13,7 @@ const DailyForcast = () => {
 
   return (
     <div>
-      {dailyData ? (
+      {dailyData && !loading ? (
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-left mb-4 ml-2">
             Daily Forecast

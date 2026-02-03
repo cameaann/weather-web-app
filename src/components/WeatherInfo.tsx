@@ -26,7 +26,7 @@ const WeatherInfo = () => {
   return (
     <>
       <WeatherInfoCard />
-      {weatherData?.current ? (
+      {weatherData?.current && !loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
           <WeatherItemCard
             title="Feels Like"
@@ -48,7 +48,7 @@ const WeatherInfo = () => {
       ) : loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
           {skeletonArray.map((index) => (
-            <Skeleton key={index} width="100%" height="8rem"  />
+            <Skeleton key={index} width="100%" height="8rem" />
           ))}
         </div>
       ) : null}

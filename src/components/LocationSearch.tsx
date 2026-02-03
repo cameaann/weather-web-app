@@ -22,10 +22,12 @@ const LocationSearch = () => {
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [selectedLocation, setLocation] = useState<LocationSuggestion | null>(
-    null
+    null,
   );
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
-  const { setWeatherData, setLoading } = useContext(WeatherContext) as WeatherContextType;
+  const { setWeatherData, setLoading } = useContext(
+    WeatherContext,
+  ) as WeatherContextType;
   const { settings } = useContext(SettingContext) as SettingContextType;
 
   useEffect(() => {
@@ -50,13 +52,12 @@ const LocationSearch = () => {
   useEffect(() => {
     if (selectedLocation) {
       setLoading(true);
-      setTimeout(() => {
         try {
           getCurrentWeather(
             selectedLocation.lat,
             selectedLocation.lon,
             settings.units,
-            settings.temperatureUnit
+            settings.temperatureUnit,
           ).then((res) => {
             console.log("From Second useEffect", res);
             const weather = res;
@@ -72,20 +73,19 @@ const LocationSearch = () => {
           console.error("Error fetching weather data:", error);
         }
         setLoading(false);
-      }, 2000);
     }
-  }, [selectedLocation, settings]);
+  }, [selectedLocation, settings, setWeatherData, setLoading]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "ArrowDown") {
       event.preventDefault();
       setHighlightedIndex((prev) =>
-        prev < suggestions.length - 1 ? prev + 1 : 0
+        prev < suggestions.length - 1 ? prev + 1 : 0,
       );
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
       setHighlightedIndex((prev) =>
-        prev > 0 ? prev - 1 : suggestions.length - 1
+        prev > 0 ? prev - 1 : suggestions.length - 1,
       );
     } else if (event.key === "Enter" && highlightedIndex >= 0) {
       event.preventDefault();

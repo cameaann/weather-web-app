@@ -7,14 +7,16 @@ import { SettingContext } from "../contexts/settingsContext";
 import { Skeleton } from "./custom/Skeleton";
 
 const WeatherInfoCard = () => {
-  const { weatherData, loading } = useContext(WeatherContext) as WeatherContextType;
+  const { weatherData, loading } = useContext(
+    WeatherContext,
+  ) as WeatherContextType;
   const currentDay = dayjs().format("dddd, MMMM D");
   const { settings } = useContext(SettingContext) as SettingContextType;
   const unit = settings?.temperatureUnit === "C" ? "°C" : "°F";
 
   return (
     <>
-      {weatherData ? (
+      {weatherData && !loading ? (
         <div className="info-card h-[28.6rem] flex flex-col md:flex-row md:justify-between items-center bg-cover bg-no-repeat bg-center  rounded-3xl p-6 md:p-10 lg:p-14 text-white justify-center mb-2">
           <div className="flex flex-col items-center md:items-start mb-6 md:mb-0">
             <div className="text-5xl bold italic">
@@ -31,7 +33,7 @@ const WeatherInfoCard = () => {
           </div>
         </div>
       ) : loading ? (
-        <Skeleton height="28.6rem" width="100%" borderRadius="1.5rem"/>
+        <Skeleton height="28.6rem" width="100%" borderRadius="1.5rem" />
       ) : null}
     </>
   );

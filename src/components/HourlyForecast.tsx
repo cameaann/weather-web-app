@@ -28,7 +28,7 @@ const HourlyForecast = () => {
 
   return (
     <>
-      {weatherData ? (
+      {weatherData && !loading ? (
         <div className="bg-neutral-800 rounded-3xl my-4 md:my-0 p-8">
           <div className="flex p-2 items-center justify-between">
             <h2 className="text-2xl font-bold">Hourly Forecast</h2>
