@@ -1,12 +1,22 @@
-import React, { useEffect, useState, useContext } from "react";
-import { getLocation, getCurrentWeather } from "../services/getDataService";
+import React, {
+  useEffect,
+  useState,
+  useContext
+} from "react";
+import { getCurrentWeather } from "../services/getDataService";
 
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
-import SearchSuggestion from "./SearchSuggestion";
+
 import { WeatherContext } from "../contexts/weatherContext";
 import type { SettingContextType, WeatherContextType } from "../types";
 import Button from "./custom/Button";
 import { SettingContext } from "../contexts/settingsContext";
+import {
+  GeoapifyGeocoderAutocomplete,
+  GeoapifyContext,
+} from "@geoapify/react-geocoder-autocomplete";
+
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 export interface LocationSuggestion {
   displayName: string;
@@ -17,48 +27,51 @@ export interface LocationSuggestion {
   state?: string;
 }
 
+type placeProperties = {
+  properties: {
+    formatted: string;
+    lat: number;
+    lon: number;
+    city: string;
+    country?: string;
+    state?: string;
+  };
+};
+
 const LocationSearch = () => {
-  const [query, setQuery] = useState<string>("");
-  const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [selectedLocation, setLocation] = useState<LocationSuggestion | null>(
     null,
   );
-  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+
   const { setWeatherData, setLoading } = useContext(
     WeatherContext,
   ) as WeatherContextType;
   const { settings } = useContext(SettingContext) as SettingContextType;
 
-  useEffect(() => {
-    try {
-      if (query.length === 0) {
-        setSuggestions([]);
-        setShowSuggestions(false);
-        return;
-      } else {
-        getLocation(query).then((res) => {
-          if (res && res.length > 1) {
-            setSuggestions(res);
-            setShowSuggestions(true);
-          }
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching locations:", error);
-    }
-  }, [query]);
+  const onPlaceSelect = (place: placeProperties) => {
+    console.log("Place", place);
+    const location = {
+      displayName: place.properties.formatted,
+      lat: place.properties.lat,
+      lon: place.properties.lon,
+      city: place.properties.city,
+      country: place.properties.country,
+      state: place.properties.state,
+    };
+    setLocation(location);
+  };
 
   useEffect(() => {
     if (selectedLocation) {
       setLoading(true);
-      try {
-        getCurrentWeather(
-          selectedLocation.lat,
-          selectedLocation.lon,
-          settings.units,
-          settings.temperatureUnit,
-        ).then((res) => {
+      void (async () => {
+        try {
+          const res = await getCurrentWeather(
+            selectedLocation.lat,
+            selectedLocation.lon,
+            settings.units,
+            settings.temperatureUnit,
+          );
           console.log("From Second useEffect", res);
           const weather = res;
           const weatherData = {
@@ -68,100 +81,48 @@ const LocationSearch = () => {
           };
 
           setWeatherData(weatherData);
-        });
-      } catch (error) {
-        console.error("Error fetching weather data:", error);
-      }
-      setLoading(false);
+        } catch (error) {
+          console.error("Error fetching weather data:", error);
+        } finally {
+          setLoading(false);
+        }
+      })();
     }
   }, [selectedLocation, settings, setWeatherData, setLoading]);
 
-  const handleQuery = () => {
-    setQuery(
-        suggestions[highlightedIndex].city +
-          (suggestions[highlightedIndex].state ? ", " + suggestions[highlightedIndex].state : "") +
-          (suggestions[highlightedIndex].country ? ", " + suggestions[highlightedIndex].country : "")
-      );
-  }
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      setHighlightedIndex((prev) =>
-        prev < suggestions.length - 1 ? prev + 1 : 0,
-      );
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      setHighlightedIndex((prev) =>
-        prev > 0 ? prev - 1 : suggestions.length - 1,
-      );
-    } else if (event.key === "Enter" && highlightedIndex >= 0) {
-      event.preventDefault();
-      setLocation(suggestions[highlightedIndex]);
-      handleQuery();
-      setShowSuggestions(false);
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (highlightedIndex >= 0) {
-      setLocation(suggestions[highlightedIndex]);
-      handleQuery();
-      setShowSuggestions(false);
-    }
   };
 
   return (
-    <div className="my-[4.8rem]">
-      <form className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 justify-center">
-        <div className="w-[100%] md:w-[50rem] flex flex-col relative">
-          <label className="input h-[4rem] w-full rounded-xl px-[2.4rem]  bg-neutral-700 border-none focus-visible:outline-none focus-within:outline-none border-none">
-            <MagnifyingGlassIcon className="w-6 h-6" />
-            <input
-              type="search"
-              className="grow py-[1.6rem] w-full h-[4rem] text-xl focus:outline-none focus-visible:outline-none focus-within:outline-none bg-neutral-700 border-none"
-              name="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e)}
-              placeholder="Search for a place..."
-              tabIndex={0}
-            />
-          </label>
-          {showSuggestions && suggestions.length > 0 && (
-            <div className="dropdown dropdown-open">
-              <SearchSuggestion
-                suggestions={suggestions}
-                setLocation={(location: LocationSuggestion) => {
-                  setLocation(location);
-                  // setQuery(
-                  //   location.city +
-                  //     (location.state ? ", " + location.state : "") +
-                  //     (location.country ? ", " + location.country : "")
-                  // );
-                  setShowSuggestions(false);
-                }}
-                highlightedIndex={highlightedIndex}
-                setHighlightedIndex={setHighlightedIndex}
-              />
-            </div>
-          )}
-        </div>
-
-        <Button
-          type="submit"
-          name="search"
-          className="btn"
-          variant="primary"
-          size="xl"
-          aria-label="Search"
-          onClick={handleSubmit}
+    <div className="my-[4.8rem] flex flex-col justify-center md:flex-row gap-[2rem]">
+      <div className="w-[100%] md:w-[50rem] flex flex-col relative">
+        <GeoapifyContext
+          apiKey={API_KEY}
+          className="w-[100%] md:w-[50rem] flex flex-col relative"
         >
-          Search
-        </Button>
-      </form>
+          <MagnifyingGlassIcon className="w-6 h-6 absolute top-[1.2rem] left-[1.5rem] z-20" />
+          <GeoapifyGeocoderAutocomplete
+            placeholder="Search for a place"
+            placeSelect={onPlaceSelect}
+            type="city"
+            skipIcons={true}
+            // onUserInput={onUserInput}
+          />
+        </GeoapifyContext>
+      </div>
+
+      <Button
+        type="submit"
+        name="search"
+        className="btn"
+        variant="primary"
+        size="xl"
+        aria-label="Search"
+        onClick={handleSubmit}
+      >
+        Search
+      </Button>
     </div>
   );
 };

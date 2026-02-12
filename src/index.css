@@ -1,6 +1,10 @@
 @import "tailwindcss";
+@import "@geoapify/geocoder-autocomplete/styles/round-borders-dark.css";
+
 @plugin "daisyui" {
-  themes: dark --default, light --prefersdark;
+  themes:
+    dark --default,
+    light --prefersdark;
   /* themes: light --default, dark --prefersdark; */
 }
 
@@ -71,7 +75,7 @@
   .radio-label:has(input[type="radio"]:checked) {
     background-size: 100%;
     background-color: var(--color-neutral-600);
-    border-radius: .8rem;
+    border-radius: 0.8rem;
   }
 
   input.custom-radio:checked + .radio-label::after {
@@ -84,7 +88,12 @@ html {
 }
 
 :root {
-  font-family: DM Sans, Avenir, Helvetica, Arial, sans-serif;
+  font-family:
+    DM Sans,
+    Avenir,
+    Helvetica,
+    Arial,
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -132,4 +141,38 @@ h1 {
   .info-card {
     background-image: url("./assets/images/bg-today-large.svg");
   }
+}
+
+.geoapify-autocomplete-input {
+  background-color: var(--color-neutral-700);
+  border: none;
+  padding: 2rem 4rem;
+  width:100%;
+}
+
+.geoapify-autocomplete-items {
+  position: absolute;
+  border: none;
+  background-color: var(--color-neutral-700);
+}
+.geoapify-autocomplete-items div:hover {
+  background-color: var(--color-neutral-600);
+}
+
+.geoapify-autocomplete-items .active {
+  background-color: var(--color-neutral-600);
+}
+
+.geoapify-autocomplete-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.geoapify-autocomplete-item .icon {
+  display: none;
+}
+
+.geoapify-close-button{
+  padding-right: 3rem;
 }
