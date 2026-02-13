@@ -19,7 +19,6 @@ const getCurrentWeather = async (
   units: string,
   temperatureUnit: string,
 ) => {
-  console.log("request for Current Weather");
 
   const unitsParam =
     units === "metric" ? "wind_speed_unit=kmh" : "wind_speed_unit=mph";
@@ -56,7 +55,6 @@ const getCurrentWeather = async (
     });
   };
   const nextHours = getNextHours(hourlyForecast);
-  console.log("Next hours", nextHours);
 
   // Group hourly data by day
   const hourlyByDay = dailyForecast.reduce(

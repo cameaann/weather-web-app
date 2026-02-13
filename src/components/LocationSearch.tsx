@@ -18,28 +18,21 @@ import {
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-export interface LocationSuggestion {
-  displayName: string;
-  lat: number;
-  lon: number;
-  city: string;
-  country?: string;
-  state?: string;
-}
-
-type placeProperties = {
-  properties: {
+type PlaceProperties = {
     formatted: string;
     lat: number;
     lon: number;
     city: string;
     country?: string;
     state?: string;
-  };
 };
 
+export interface ILocation {
+  properties: PlaceProperties
+}
+
 const LocationSearch = () => {
-  const [selectedLocation, setLocation] = useState<LocationSuggestion | null>(
+  const [selectedLocation, setLocation] = useState<PlaceProperties | null>(
     null,
   );
 
@@ -48,10 +41,10 @@ const LocationSearch = () => {
   ) as WeatherContextType;
   const { settings } = useContext(SettingContext) as SettingContextType;
 
-  const onPlaceSelect = (place: placeProperties) => {
-    console.log("Place", place);
+  const onPlaceSelect = (place: ILocation) => {
+    if(!place){ return; }
     const location = {
-      displayName: place.properties.formatted,
+      formatted: place.properties.formatted,
       lat: place.properties.lat,
       lon: place.properties.lon,
       city: place.properties.city,
@@ -72,7 +65,7 @@ const LocationSearch = () => {
             settings.units,
             settings.temperatureUnit,
           );
-          console.log("From Second useEffect", res);
+
           const weather = res;
           const weatherData = {
             city: selectedLocation.city,
@@ -107,7 +100,6 @@ const LocationSearch = () => {
             placeSelect={onPlaceSelect}
             type="city"
             skipIcons={true}
-            // onUserInput={onUserInput}
           />
         </GeoapifyContext>
       </div>
