@@ -145,6 +145,7 @@ const LocationSearch = () => {
             onUserInput={onUserInput}
             type="city"
             skipIcons={true}
+            aria-label="Search for a place"
           />
         </GeoapifyContext>
       </div>

@@ -31,7 +31,7 @@ const Settings = () => {
 
 
   const label = () => (
-    <span className="flex gap-3 items-center  bg-neutral-800 p-3 rounded-lg cursor-pointer select-none">
+    <button className="flex gap-3 items-center  bg-neutral-800 p-3 rounded-lg cursor-pointer select-none" type="button">
       <i>
         <img src={settingsIcon} alt="Units" />
       </i>
@@ -49,7 +49,7 @@ const Settings = () => {
           clipRule="evenodd"
         />
       </svg>
-    </span>
+    </button>
   );
   const units = settings.units === "metric" ? "Imperial" : "Metric";
 

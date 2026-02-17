@@ -14,6 +14,7 @@ export const AppContent = () => {
   return (
     <>
       <Header />
+	  <main>
       {error && error?.type === "general" ? (
         <HandleErrorComponent error={error} />
       ) : (
@@ -35,6 +36,7 @@ export const AppContent = () => {
           )}
         </>
       )}
+	  </main>
     </>
   );
 };
