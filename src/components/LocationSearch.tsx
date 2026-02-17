@@ -33,7 +33,7 @@ const LocationSearch = () => {
   );
   const [place, setPlace] = useState<string>("");
 
-  const { setWeatherData, setLoading, setError, error } = useContext(
+  const { setWeatherData, setLoading, setError } = useContext(
     WeatherContext,
   ) as WeatherContextType;
   const { settings } = useContext(SettingContext) as SettingContextType;

@@ -6,9 +6,9 @@ import { type SettingsType } from "../types";
 const Settings = () => {
   const { settings, setSettings } = useContext(SettingContext);
   const [showSettings, setShowSettings] = useState(false);
-  const [tempUnit, setTempUnit] = useState(settings.temperatureUnit || "C");
-  const [windUnit, setWindUnit] = useState(settings.windSpeedUnit || "km/h");
-  const [precipUnit, setPrecipUnit] = useState(
+  const [tempUnit] = useState(settings.temperatureUnit || "C");
+  const [windUnit] = useState(settings.windSpeedUnit || "km/h");
+  const [precipUnit] = useState(
     settings.precipitationUnit || "millimeters"
   );
   const settingsRef = useRef<HTMLDivElement>(null);
