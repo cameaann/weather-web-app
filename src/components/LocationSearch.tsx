@@ -1,9 +1,5 @@
-import React, {
-  useEffect,
-  useState,
-  useContext
-} from "react";
-import { getCurrentWeather } from "../services/getDataService";
+import React, { useEffect, useState, useContext } from "react";
+import { getCurrentWeather, getLocation } from "../services/getDataService";
 
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 
@@ -19,30 +15,33 @@ import {
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 type PlaceProperties = {
-    formatted: string;
-    lat: number;
-    lon: number;
-    city: string;
-    country?: string;
-    state?: string;
+  formatted: string;
+  lat: number;
+  lon: number;
+  city: string;
+  country?: string;
+  state?: string;
 };
 
 export interface ILocation {
-  properties: PlaceProperties
+  properties: PlaceProperties;
 }
 
 const LocationSearch = () => {
   const [selectedLocation, setLocation] = useState<PlaceProperties | null>(
     null,
   );
+  const [place, setPlace] = useState<string>("");
 
-  const { setWeatherData, setLoading } = useContext(
+  const { setWeatherData, setLoading, setError, error } = useContext(
     WeatherContext,
   ) as WeatherContextType;
   const { settings } = useContext(SettingContext) as SettingContextType;
 
   const onPlaceSelect = (place: ILocation) => {
-    if(!place){ return; }
+    if (!place) {
+      return;
+    }
     const location = {
       formatted: place.properties.formatted,
       lat: place.properties.lat,
@@ -75,20 +74,64 @@ const LocationSearch = () => {
 
           setWeatherData(weatherData);
         } catch (error) {
-          console.error("Error fetching weather data:", error);
+          if (error instanceof Error) {
+            setError({
+              type: "general",
+              message:
+                "We couldn’t connect to the server (API error). Please try again in a few moments.",
+            });
+          } else {
+            console.log(error);
+          }
         } finally {
           setLoading(false);
         }
       })();
     }
-  }, [selectedLocation, settings, setWeatherData, setLoading]);
+  }, [selectedLocation, settings, setWeatherData, setLoading, setError]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const onUserInput = (input: string) => {
+    setLocation(null);
+    setWeatherData(null);
+    setError(null);
+    setPlace(input);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    if (place !== "") {
+      const location = await getLocation(place);
+      if (location === undefined || location === null) {
+        setError({ type: "no-results", message: "No search result found!" });
+        setLocation(null);
+        return;
+      }
+
+      if (location && location.length > 0) {
+        const selected = location[0];
+
+        setLocation({
+          formatted: selected.formatted,
+          lat: selected.lat,
+          lon: selected.lon,
+          city: selected.city,
+          country: selected.country,
+          state: selected.state,
+        });
+      } else {
+        console.log("LOcation", location);
+        setError({ type: "no-results", message: "No search result found" });
+      }
+    }
   };
 
   return (
-    <div className="my-[4.8rem] flex flex-col justify-center md:flex-row gap-[2rem]">
+    <form
+      className="my-[4.8rem] flex flex-col justify-center md:flex-row gap-[2rem]"
+      onSubmit={handleSubmit}
+    >
       <div className="w-[100%] md:w-[50rem] flex flex-col relative">
         <GeoapifyContext
           apiKey={API_KEY}
@@ -96,8 +139,10 @@ const LocationSearch = () => {
         >
           <MagnifyingGlassIcon className="w-6 h-6 absolute top-[1.2rem] left-[1.5rem] z-20" />
           <GeoapifyGeocoderAutocomplete
+            value={selectedLocation ? selectedLocation.formatted : place}
             placeholder="Search for a place"
             placeSelect={onPlaceSelect}
+            onUserInput={onUserInput}
             type="city"
             skipIcons={true}
           />
@@ -111,11 +156,10 @@ const LocationSearch = () => {
         variant="primary"
         size="xl"
         aria-label="Search"
-        onClick={handleSubmit}
       >
         Search
       </Button>
-    </div>
+    </form>
   );
 };
 

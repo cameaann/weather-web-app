@@ -60,6 +60,7 @@ const Settings = () => {
       units: newUnits,
       windSpeedUnit: newUnits === "metric" ? "km/h" : "mph",
       precipitationUnit: newUnits === "metric" ? "millimeters" : "inches",
+      temperatureUnit: newUnits === "metric" ? "C" : "F",
     };
     setSettings(newSettings);
   };
@@ -76,13 +77,13 @@ const Settings = () => {
     setShowSettings(false);
   };
 
-  const handleTempUnitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTempUnit(e.target.value);
-    setSettings({
-      ...settings,
-      temperatureUnit: e.target.value,
-    });
-  };
+  // const handleTempUnitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setTempUnit(e.target.value);
+  //   setSettings({
+  //     ...settings,
+  //     temperatureUnit: e.target.value,
+  //   });
+  // };
 
   return (
     <div ref={settingsRef}>
@@ -111,8 +112,8 @@ const Settings = () => {
                 name="temperature"
                 value="C"
                 className="custom-radio"
-                checked={tempUnit === "C"}
-                onChange={handleTempUnitChange}
+                checked={settings.temperatureUnit === "C"}
+                onChange={(handleSwitchUnits)}
               />
               <span className="basis-60 h-[2rem] flex items-center">
                 Celsius (C)
@@ -125,8 +126,8 @@ const Settings = () => {
                 name="temperature"
                 value="F"
                 className="custom-radio"
-                checked={tempUnit === "F"}
-                onChange={handleTempUnitChange}
+                checked={settings.temperatureUnit === "F"}
+                onChange={handleSwitchUnits}
               />
               <span className="basis-60 h-[2rem] flex items-center">
                 Fahrenheit (F)
@@ -146,7 +147,7 @@ const Settings = () => {
                 value="km/h"
                 className="custom-radio"
                 checked={settings.windSpeedUnit === "km/h"}
-                onChange={() => setWindUnit("km/h")}
+                onChange={handleSwitchUnits}
               />
               <span className="basis-60 h-[2rem] flex items-center">km/h</span>
             </label>
@@ -158,7 +159,7 @@ const Settings = () => {
                 value="mph"
                 className="custom-radio"
                 checked={settings.windSpeedUnit === "mph"}
-                onChange={() => setWindUnit("mph")}
+                onChange={handleSwitchUnits}
               />
               <span className="basis-60 h-[2rem] flex items-center">mph</span>
             </label>
@@ -176,10 +177,10 @@ const Settings = () => {
                 value="millimeters"
                 className="custom-radio"
                 checked={settings.precipitationUnit === "millimeters"}
-                onChange={() => setPrecipUnit("millimeters")}
+                onChange={handleSwitchUnits}
               />
               <span className="basis-60 h-[2rem] flex items-center">
-                millimeters (mm)
+                Millimeters (mm)
               </span>
             </label>
             <label className="radio-label" htmlFor="inches">
@@ -190,10 +191,10 @@ const Settings = () => {
                 value="in"
                 className="custom-radio"
                 checked={settings.precipitationUnit === "inches"}
-                onChange={() => setPrecipUnit("inches")}
+                onChange={handleSwitchUnits}
               />
               <span className="basis-60 h-[2rem] flex items-center">
-                inches (in)
+                Inches (in)
               </span>
             </label>
           </fieldset>

@@ -176,3 +176,7 @@ h1 {
 .geoapify-close-button{
   padding-right: 3rem;
 }
+
+.retry-btn{
+  background-color: #262540;
+}

@@ -1,3 +1,5 @@
+import type { ErrorType } from "./contexts/weatherProvider";
+
 export interface DailyForecast {
   date: string;
   temperature_max: number;
@@ -34,9 +36,11 @@ export interface WeatherData {
 
 export type WeatherContextType = {
   weatherData: WeatherData | null;
-  setWeatherData: (weather: WeatherData) => void;
+  setWeatherData: (weather: WeatherData | null) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
+  error: ErrorType | null;
+  setError: (error: ErrorType | null) => void;
 };
 
 

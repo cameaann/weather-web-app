@@ -12,7 +12,7 @@ const Button = ({
   className = "",
   ...props
 }: ButtonProps) => {
-  const baseStyles = "font-semibold rounded-xl transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseStyles = "font-semibold rounded-xl transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
 
   const variants = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
